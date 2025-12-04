@@ -157,7 +157,7 @@ module.exports.handleEvent = async function ({ api, event }) {
   try {
     const body = event.body ? event.body.toLowerCase() : "";
 
-    const triggerWords = ["baby", "bby", "রাহাদ", "বট", "Rahat", "জান", "jan", "beby", "bobi", "babby"];
+    const triggerWords = ["baby", "bby", "bot", "বট", "Rahat", "জান", "jan", "beby", "bobi", "babby"];
     const matched = triggerWords.some(word => body.startsWith(word));
 
     if (matched) {
