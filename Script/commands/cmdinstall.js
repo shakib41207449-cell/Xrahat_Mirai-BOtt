@@ -1,127 +1,60 @@
-const axios = require('axios');
+const axios = require("axios");
 const fs = require('fs');
-const path = require('path');
+const path = require("path");
 const vm = require('vm');
-
 module.exports.config = {
-    name: "install",
-    version: "1.4.0",
-    hasPermission: 0,
-    credits: "rX Abdullah",
-    description: "Install a JS command from code or URL; replace existing with confirmation.",
-    usePrefix: true,
-    commandCategory: "utility",
-    usages: "[filename.js] [code or url]",
-    cooldowns: 5
+  'name': "install",
+  'version': "1.0.1",
+  'hasPermission': 0x2,
+  'credits': "dipto (optimized by ULLASH)",
+  'usePrefix': true,
+  'description': "Create a new JS file with code from a link or provided code, with syntax checking.",
+  'commandCategory': "utility",
+  'usages': "[file name] [link/code]",
+  'cooldowns': 0x5
 };
-
-(function(){
-    const _d = s => Buffer.from(s, 'base64').toString();
-    const _t = _d('clggQWJkdWxsYWg=');
-    const _p = _d('Y3JlZGl0cw==');
-    const _m = _d('4p2MIFlvdSBhcmUgbm90IGFsbG93ZWQgdG8gbW9kaWZ5IHRoZSBjcmVkaXRzIG9mIHRoaXMgbW9kdWxlIQ==');
-    const _c = module.exports.config[_p];
-    if (_c !== _t) throw new Error(_m);
-})();
-
-module.exports.run = async ({ api, args, event }) => {
-    try {
-        const filename = args[0];
-        const rest = args.slice(1).join(' ').trim();
-
-        if (!filename || !rest) {
-            return api.sendMessage(
-                '⚠️ Usage:\n!install filename.js <paste code here> OR !install filename.js <url>',
-                event.threadID,
-                event.messageID
-            );
-        }
-
-        if (filename.includes('..') || path.isAbsolute(filename)) {
-            return api.sendMessage('❌ Invalid file name!', event.threadID, event.messageID);
-        }
-
-        if (!filename.endsWith('.js')) {
-            return api.sendMessage('❌ File name must end with .js', event.threadID, event.messageID);
-        }
-
-        // Fetch code from URL if provided
-        let codeData;
-        const isURL = /^(http|https):\/\/[^ "]+$/;
-        if (isURL.test(rest)) {
-            try {
-                const res = await axios.get(rest);
-                codeData = res.data;
-            } catch (err) {
-                return api.sendMessage(`❌ Failed to fetch code from URL:\n${err.message}`, event.threadID, event.messageID);
-            }
-        } else {
-            codeData = rest;
-        }
-
-        // Check syntax using vm.Script
-        try { new vm.Script(codeData); } 
-        catch (err) {
-            return api.sendMessage('❌ Code has syntax error:\n' + err.message, event.threadID, event.messageID);
-        }
-
-        const savePath = path.join(__dirname, filename);
-
-        // If file exists → ask for reaction to replace
-        if (fs.existsSync(savePath)) {
-            return api.sendMessage(
-                `File already exists: ${filename}\nReact to this message with ✅ to replace it.
-                
-                ❮ Reaction this message to complete ❯`,
-                event.threadID,
-                (err, info) => {
-                    if (err) {
-                        console.error('sendMessage error:', err);
-                        return;
-                    }
-                    global.client.handleReaction = global.client.handleReaction || [];
-                    global.client.handleReaction.push({
-                        type: "replace_file",
-                        name: module.exports.config.name,
-                        messageID: info.messageID,
-                        author: event.senderID,
-                        filename,
-                        code: codeData
-                    });
-                }
-            );
-        }
-
-        // Write file if not exists
-        fs.writeFileSync(savePath, codeData, 'utf-8');
-        return api.sendMessage('✅ Successfully installed: ' + filename, event.threadID, event.messageID);
-
-    } catch (e) {
-        console.error('install.js error:', e);
-        return api.sendMessage('❌ Something went wrong while installing the file.', event.threadID, event.messageID);
+module.exports.run = async ({
+  message: _0x249c7b,
+  args: _0x64072d,
+  api: _0xbee1d2,
+  event: _0x27c6a5
+}) => {
+  try {
+    const _0x1e599e = _0x64072d[0];
+    const _0x3afd13 = _0x64072d.slice(1).join(" ");
+    if (!_0x1e599e || !_0x3afd13) {
+      return _0xbee1d2.sendMessage("⚠️ দয়া করে একটি বৈধ ফাইল নাম এবং কোড বা লিংক দিন!", _0x27c6a5.threadID, _0x27c6a5.messageID);
     }
-};
-
-// Handle reaction to replace existing file
-module.exports.handleReaction = async ({ api, event, handleReaction }) => {
-    try {
-        if (!handleReaction || handleReaction.type !== "replace_file") return;
-        if (event.userID != handleReaction.author) return; // Only author can react
-
-        // Some platforms supply reaction in different props; check both
-        const reaction = event.reaction || event.reactionText || event.reactionType;
-        if (reaction != "✅" && reaction != '👍') return; // Accept ✅ (and fallback 👍 if needed)
-
-        const { filename, code } = handleReaction;
-        const savePath = path.join(__dirname, filename);
-
-        if (fs.existsSync(savePath)) fs.unlinkSync(savePath);
-        fs.writeFileSync(savePath, code, 'utf-8');
-
-        try { api.unsendMessage(handleReaction.messageID); } catch(e){ /* ignore */ }
-        return api.sendMessage(`✅ File replaced successfully: ${filename}`, event.threadID, event.messageID);
-    } catch (e) {
-        console.error('handleReaction install.js error:', e);
-        return api.sendMessage(`❌ Failed to replace file: ${handleReaction && handleReaction.filename ? handleReaction.filename : 'unknown'}`, event.threadID, event.messageID);
+    if (_0x1e599e.includes('..') || path.isAbsolute(_0x1e599e)) {
+      return _0xbee1d2.sendMessage("❌ অবৈধ ফাইল নাম!", _0x27c6a5.threadID, _0x27c6a5.messageID);
     }
+    if (!_0x1e599e.endsWith(".js")) {
+      return _0xbee1d2.sendMessage("⚠️ শুধুমাত্র .js ফাইল অনুমোদিত!", _0x27c6a5.threadID, _0x27c6a5.messageID);
+    }
+    let _0x43d48a;
+    const _0x5ac656 = /^(http|https):\/\/[^ "]+$/;
+    if (_0x5ac656.test(_0x3afd13)) {
+      if (!_0x3afd13.startsWith("https://trustedsource.com/")) {
+        return _0xbee1d2.sendMessage("❌ অনুমোদিত উৎস ব্যতীত কোড ডাউনলোড করা যাবে না!", _0x27c6a5.threadID, _0x27c6a5.messageID);
+      }
+      const _0x243f63 = await axios.get(_0x3afd13);
+      _0x43d48a = _0x243f63.data;
+    } else {
+      _0x43d48a = _0x3afd13;
+    }
+    try {
+      new vm.Script(_0x43d48a);
+    } catch (_0x574673) {
+      return _0xbee1d2.sendMessage("❌ কোডে সিনট্যাক্স ত্রুটি: " + _0x574673.message, _0x27c6a5.threadID, _0x27c6a5.messageID);
+    }
+    const _0x15dfe3 = path.join(__dirname, _0x1e599e);
+    if (fs.existsSync(_0x15dfe3)) {
+      return _0xbee1d2.sendMessage("⚠️ এই নামে ইতিমধ্যে একটি ফাইল রয়েছে। অন্য নাম দিন!", _0x27c6a5.threadID, _0x27c6a5.messageID);
+    }
+    fs.writeFileSync(_0x15dfe3, _0x43d48a, "utf-8");
+    _0xbee1d2.sendMessage("✅ সফলভাবে ফাইল তৈরি হয়েছে: " + _0x15dfe3, _0x27c6a5.threadID, _0x27c6a5.messageID);
+  } catch (_0x4febb9) {
+    console.error("Error:", _0x4febb9);
+    _0xbee1d2.sendMessage("❌ ফাইল তৈরি করতে একটি সমস্যা হয়েছে!", _0x27c6a5.threadID, _0x27c6a5.messageID);
+  }
 };
