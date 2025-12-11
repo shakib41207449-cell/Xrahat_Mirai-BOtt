@@ -1,137 +1,36 @@
-[
-    {
-        "key": "dbln",
-        "value": "%7B%2261584871077873%22%3A%22rvWyZgI3%22%7D",
-        "domain": "facebook.com",
-        "path": "/login/device-based/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.970Z",
-        "lastAccessed": "2025-12-11T09:24:14.973Z"
-    },
-    {
-        "key": "datr",
-        "value": "sYs3afJxO3e2GghodjvWmvPC",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.973Z",
-        "lastAccessed": "2025-12-11T09:24:14.973Z"
-    },
-    {
-        "key": "sb",
-        "value": "sYs3aaWlLexloNRwJ3baDJKi",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.973Z",
-        "lastAccessed": "2025-12-11T09:24:14.973Z"
-    },
-    {
-        "key": "locale",
-        "value": "en_GB",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.973Z",
-        "lastAccessed": "2025-12-11T09:24:14.973Z"
-    },
-    {
-        "key": "vpd",
-        "value": "v1%3B859x442x1.631250023841858",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.973Z",
-        "lastAccessed": "2025-12-11T09:24:14.973Z"
-    },
-    {
-        "key": "ps_l",
-        "value": "1",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.973Z",
-        "lastAccessed": "2025-12-11T09:24:14.973Z"
-    },
-    {
-        "key": "ps_n",
-        "value": "1",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.973Z",
-        "lastAccessed": "2025-12-11T09:24:14.973Z"
-    },
-    {
-        "key": "m_pixel_ratio",
-        "value": "1.631250023841858",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.973Z",
-        "lastAccessed": "2025-12-11T09:24:14.974Z"
-    },
-    {
-        "key": "wd",
-        "value": "442x989",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.974Z",
-        "lastAccessed": "2025-12-11T09:24:14.974Z"
-    },
-    {
-        "key": "c_user",
-        "value": "61569820913826",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.974Z",
-        "lastAccessed": "2025-12-11T09:24:14.974Z"
-    },
-    {
-        "key": "xs",
-        "value": "9%3AthwOL_h59dti9g%3A2%3A1765444306%3A-1%3A-1",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.974Z",
-        "lastAccessed": "2025-12-11T09:24:14.974Z"
-    },
-    {
-        "key": "fr",
-        "value": "0Nfvc8f5a90g0uruf.AWfM5OM3hj-TKXfPex1qbNei3Ft8y9RuP3GS36amJJ2A-n6Gx7U.BpN4ux..AAA.0.0.BpOorY.AWd-EbVZQGVskJ8wvgcY0v6MnrI",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.974Z",
-        "lastAccessed": "2025-12-11T09:24:14.974Z"
-    },
-    {
-        "key": "pas",
-        "value": "61584871077873%3Akh3EJs2cke%2C61569820913826%3AvRScENTBND",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.974Z",
-        "lastAccessed": "2025-12-11T09:24:14.974Z"
-    },
-    {
-        "key": "fbl_st",
-        "value": "100622609%3BT%3A29424071",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.974Z",
-        "lastAccessed": "2025-12-11T09:24:14.974Z"
-    },
-    {
-        "key": "wl_cbv",
-        "value": "v2%3Bclient_version%3A3013%3Btimestamp%3A1765444312",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2025-12-11T09:24:14.974Z",
-        "lastAccessed": "2025-12-11T09:24:14.974Z"
-    }
-]
+name: Node.js CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    # Step to check out the repository code
+    - uses: actions/checkout@v2
+
+    # Step to set up the specified Node.js version
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    # Step to install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # Step to run the bot with the correct port
+    - name: Start the bot
+      env:
+        PORT: 8080
+      ru
